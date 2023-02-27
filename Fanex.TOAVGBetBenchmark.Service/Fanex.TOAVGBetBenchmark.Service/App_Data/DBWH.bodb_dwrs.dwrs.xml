@@ -1,0 +1,6 @@
+﻿<Functions>
+  <Function Name="Auto Mail - Score Box">
+    <Setting Key="DailyJob_CheckTasksStatus" SpName="DailyJob_CheckTasksStatus" DbName="DBWH.bodb_dwrs.dwrs" TimeOut="0" />
+    <Setting Key="Acc_Rpt_Letstalk_Benchmark" SpName="Acc_Rpt_Letstalk_Benchmark" DbName="DBWH.bodb_dwrs.dwrs" TimeOut="0" />
+  </Function>
+</Functions>
