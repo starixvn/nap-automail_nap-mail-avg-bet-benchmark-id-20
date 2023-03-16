@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Fanex.LetstalkService.Client;
+﻿using Fanex.LetstalkService.Client;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.TOAVGBetBenchmark.Business.Models;
 using Fanex.TOAVGBetBenchmark.Service.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
