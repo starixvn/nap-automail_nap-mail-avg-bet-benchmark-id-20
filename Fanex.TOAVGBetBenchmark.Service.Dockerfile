@@ -6,7 +6,7 @@ COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service/Fanex.TOA
 
 RUN ls /src -l
 WORKDIR /src/Fanex.TOAVGBetBenchmark.Service
-RUN dotnet nuget add source http://nuget.nexdev.net/api/v2
+RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
 RUN dotnet restore -v n
 
 COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service .

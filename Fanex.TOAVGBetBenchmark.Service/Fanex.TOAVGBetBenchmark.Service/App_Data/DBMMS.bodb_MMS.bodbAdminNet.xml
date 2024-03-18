@@ -1,5 +1,0 @@
-﻿<Functions>
-  <Function Name="Auto MailBox">
-    <Setting Key="Acc_Rpt_LetstalkPreRunLog_Insert" SpName="Acc_Rpt_LetstalkPreRunLog_Insert" DbName="DBMMS.bodb_MMS.bodbAdminNet" Timeout="0"></Setting>
-  </Function>
-</Functions>
