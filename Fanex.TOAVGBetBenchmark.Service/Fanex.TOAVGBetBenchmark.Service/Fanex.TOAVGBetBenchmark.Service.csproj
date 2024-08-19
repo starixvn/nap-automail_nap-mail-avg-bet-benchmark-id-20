@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="App_Data\DBMMS.bodb_MMS.bodbAdminNet.xml" />
+    <None Remove="App_Data\DBMMS.bodb_MMS.wsv_nap.xml" />
     <None Remove="App_Data\DBWH.bodb_dwrs.dwrs.xml" />
     <None Remove="Templates\TOAVGBetBenchmark-NoData.xlsx" />
     <None Remove="Templates\TOAVGBetBenchmark.xlsx" />
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App_Data\DBMMS.bodb_MMS.bodbAdminNet.xml">
+    <Content Include="App_Data\DBMMS.bodb_MMS.wsv_nap.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\DBWH.bodb_dwrs.dwrs.xml">
