@@ -53,8 +53,10 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
                 workbook.DocumentProperties.Clear();
                 using var sheet = workbook.Worksheets[sheetNameNeedToExport];
                 using var ms = new MemoryStream();
-                sheet.ToEMFStream(ms, imageProperty.FirstRow, imageProperty.FirstColumn, imageProperty.LastRow, imageProperty.LastColumn);
-
+                var stream = sheet.ToImage(imageProperty.FirstRow, imageProperty.FirstColumn, imageProperty.LastRow, imageProperty.LastColumn);
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
                 using var img = Image.FromStream(ms);
                 img.Save(imageName, ImageFormat.Jpeg);
 

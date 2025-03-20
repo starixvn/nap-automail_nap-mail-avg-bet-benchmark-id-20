@@ -1,9 +1,10 @@
-﻿using Fanex.LetstalkService.Core.Models;
-using Fanex.LetstalkService.Core.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
+    using System.IO;
+    using LetstalkService.Client.Models;
+
     public interface MessageService
     {
         LetstalkModel CreateLetstalkModel(string fileName, string letstalkGroup);
@@ -17,7 +18,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             letstalkAttachments.Add(new LetstalkAttachment
             {
                 FileName = fileName,
-                Bytes = FileBinaryService.ConvertFileToBinary(fileName)
+                Bytes = File.ReadAllBytes(fileName)
             });
 
             return new LetstalkModel
