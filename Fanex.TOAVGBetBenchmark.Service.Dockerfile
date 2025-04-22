@@ -5,22 +5,22 @@ WORKDIR /src
 COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Business ./Fanex.TOAVGBetBenchmark.Business
 COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service.csproj ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service.csproj
 
-
 WORKDIR /src/Fanex.TOAVGBetBenchmark.Service
 
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
-RUN dotnet restore -v n -r linux-x64 
-
+RUN --mount=type=cache,target=/root/.nuget/packages \
+	dotnet restore -v n -r linux-x64
 
 COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service .
 
 COPY ./Fanex.TAPerf.Service/Fanex.TAPerf.Service .
 
-RUN dotnet publish -r linux-x64 --self-contained false -o /app 
+RUN --mount=type=cache,target=/root/.nuget/packages \
+	dotnet publish -r linux-x64 --self-contained false -o /app
 
 FROM hub.nexdev.net/base/dotnet/core/aspnet:9.0-nap-mail-core
 
-# Don’t run as root
+# Donï¿½t run as root
 RUN adduser --disabled-password \
   --home /app \
   --gecos '' dotnetuser && chown -R dotnetuser /app && chown -R dotnetuser /tmp
@@ -32,6 +32,5 @@ ENV COMPlus_EnableDiagnostics=0
 
 WORKDIR /app
 COPY --from=builder /app .
-
 
 ENTRYPOINT ["dotnet", "Fanex.TOAVGBetBenchmark.Service.dll"]
