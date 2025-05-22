@@ -13,8 +13,6 @@ RUN --mount=type=cache,target=/root/.nuget/packages \
 
 COPY ./Fanex.TOAVGBetBenchmark.Service/Fanex.TOAVGBetBenchmark.Service .
 
-COPY ./Fanex.TAPerf.Service/Fanex.TAPerf.Service .
-
 RUN --mount=type=cache,target=/root/.nuget/packages \
 	dotnet publish -r linux-x64 --self-contained false -o /app
 
