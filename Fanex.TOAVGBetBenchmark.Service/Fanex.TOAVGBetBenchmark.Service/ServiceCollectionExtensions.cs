@@ -1,5 +1,6 @@
 ﻿using Fanex.Data.Repository;
 using Fanex.LetstalkService.Client;
+using Fanex.MailDelivery.Client;
 using Fanex.TOAVGBetBenchmark.Business.Models;
 using Fanex.TOAVGBetBenchmark.Business.Services;
 using Fanex.TOAVGBetBenchmark.Service.Services;
@@ -9,12 +10,15 @@ using OfficeOpenXml;
 using System;
 using System.IO;
 using LetstalkConfig = Fanex.LetstalkService.Client.AppConfigService;
+
 namespace Fanex.TOAVGBetBenchmark.Service
 {
     using AppConfigService = Business.Services.AppConfigService;
 
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection Services { get; set; } = null!;
+
         public static void AddConfig(this IServiceCollection services)
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
@@ -26,6 +30,7 @@ namespace Fanex.TOAVGBetBenchmark.Service
 
         public static void AddInternalServices(this IServiceCollection services)
         {
+            Services = services;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             services.AddSingleton<Log, LogImp>();
             services.AddSingleton<MessageService, MessageServiceImp>();
@@ -38,6 +43,8 @@ namespace Fanex.TOAVGBetBenchmark.Service
             services.AddSingleton<DateRangeService, DateRangeServiceImp>();
             services.AddSingleton<ExcelService, ExcelServiceImp>();
             services.AddSingleton<MainService, MainServiceImp>();
+
+            MailClientHandler.Start();
         }
     }
 }
