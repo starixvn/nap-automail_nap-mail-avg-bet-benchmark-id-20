@@ -84,6 +84,14 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
 
             var letstalkFails = new List<string>();
             var rawData = dataService.QueryTOAVGBetBenchmark();
+            rawData.ForEach(row =>
+            {
+                row.Benchmark /= 1000;
+                row.AVGBenchmark /= 1000;
+                row.MTD /= 1000;
+                row.AVGMTD /= 1000;
+            });
+
             var errFiles = rawData.Count > 0
                 ? SendLetstalkImageData(rawData)
                 : SendLetstalkImageNoData();
@@ -138,13 +146,12 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             var excelPath = excelService.ExportExcelWithNoData(setting);
             var status = SendLetstalk(excelPath, setting.LetstalkGroup);
             SendMail(setting, excelPath);
-            return new List<string> { status ? string.Empty : $"{excelPath} - Letstalk sent Unsuccessfully." };
+            return [status ? string.Empty : $"{excelPath} - Letstalk sent Unsuccessfully."];
         }
 
         private bool SendLetstalk(string imagePath, string group)
         {
-            var letstalkGroup = group;
-            var letstalkModel = messageService.CreateLetstalkModel(imagePath, letstalkGroup);
+            var letstalkModel = messageService.CreateLetstalkModel(imagePath, group);
             bool status;
             if (AppConfigService.Config.IsSentDirectly)
             {
