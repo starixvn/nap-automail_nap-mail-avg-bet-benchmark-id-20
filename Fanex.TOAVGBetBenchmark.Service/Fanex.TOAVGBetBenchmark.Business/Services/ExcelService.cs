@@ -1,29 +1,22 @@
-﻿using Fanex.TOAVGBetBenchmark.Business.Models;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
+using Fanex.TOAVGBetBenchmark.Business.Model;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
     public interface ExcelService
     {
-        string ExportExcel(List<BenchmarkModel> data, int batchIndex, int totalBatch, bool isAllInfo, TOAVGBetBenchmarkSettings setting);
+        string ExportExcel(List<BenchmarkModel> data, int batchIndex, int totalBatch, bool isAllInfo, ToavgBetBenchmarkSettings setting);
 
-        string ExportExcelWithNoData(TOAVGBetBenchmarkSettings setting);
+        string ExportExcelWithNoData(ToavgBetBenchmarkSettings setting);
     }
 
-    public class ExcelServiceImp : ExcelService
+    public class ExcelServiceImp(DateRangeService dateRangeService) : ExcelService
     {
-        private readonly DateRangeService dateRangeService;
-
-        public ExcelServiceImp(DateRangeService dateRangeService)
+        public string ExportExcel(List<BenchmarkModel> data, int batchIndex, int totalBatch, bool isAllInfo, ToavgBetBenchmarkSettings setting)
         {
-            this.dateRangeService = dateRangeService;
-        }
-
-        public string ExportExcel(List<BenchmarkModel> data, int batchIndex, int totalBatch, bool isAllInfo, TOAVGBetBenchmarkSettings setting)
-        {
-            using var excelPackage = new ExcelPackage(new FileInfo($"Templates/TOAVGBetBenchmark.xlsx"));
+            using var excelPackage = new ExcelPackage(new FileInfo("Templates/TOAVGBetBenchmark.xlsx"));
             using var template = excelPackage.Workbook.Worksheets["Data"];
             template.Cells["B4"].LoadFromCollection(data, false);
 
@@ -33,11 +26,11 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             return Save(excelPackage, batchIndex, isAllInfo);
         }
 
-        private void RenderTitle(int batchIndex, int totalBatch, ExcelWorksheet template, bool isAllInfo, TOAVGBetBenchmarkSettings setting)
+        private void RenderTitle(int batchIndex, int totalBatch, ExcelWorksheet template, bool isAllInfo, ToavgBetBenchmarkSettings setting)
         {
             var title = isAllInfo
-                ? setting.Exceltitle
-                : $"{setting.Exceltitle} - Page {batchIndex + 1} of {totalBatch}";
+                ? setting.ExcelTitle
+                : $"{setting.ExcelTitle} - Page {batchIndex + 1} of {totalBatch}";
 
             title += $" (Sent Date: {dateRangeService.RptDate:dd-MMM-yyyy})";
             template.Cells["B2"].Value = title;
@@ -81,32 +74,32 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             var fileName = isAllInfo
                 ? $"TO-AVG-Bet-Benchmark-{date:yyyyMMdd}.xlsx"
                 : $"TO-AVG-Bet-Benchmark-{batchIndex + 1}-{date:yyyyMMdd}.xlsx";
-            var path = $@"{AppConfigService.Config.Path}/{date:yyyy}/{date:MM}";
+            var path = $"{AppConfigService.Config.Path}/{date:yyyy}/{date:MM}";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            path = $@"{path}/{fileName}";
+            path = $"{path}/{fileName}";
             excelPackage.Workbook.Worksheets.Delete("Note");
             excelPackage.SaveAs(new FileInfo(path), AppConfigService.Config.Password);
 
             return path;
         }
 
-        public string ExportExcelWithNoData(TOAVGBetBenchmarkSettings setting)
+        public string ExportExcelWithNoData(ToavgBetBenchmarkSettings setting)
         {
-            using var excelPackage = new ExcelPackage(new FileInfo($"Templates/TOAVGBetBenchmark-NoData.xlsx"));
+            using var excelPackage = new ExcelPackage(new FileInfo("Templates/TOAVGBetBenchmark-NoData.xlsx"));
             var template = excelPackage.Workbook.Worksheets["Data"];
-            RenderTitleWithNoData(setting.Exceltitle, template);
+            RenderTitleWithNoData(setting.ExcelTitle, template);
 
             return Save(excelPackage, 0, true);
         }
 
-        private void RenderTitleWithNoData(string exceltitle, ExcelWorksheet template)
+        private void RenderTitleWithNoData(string excelTitle, ExcelWorksheet template)
         {
-            exceltitle += $" (Sent Date: {dateRangeService.RptDate:dd-MMM-yyyy})";
-            template.Cells["B2"].Value = exceltitle;
+            excelTitle += $" (Sent Date: {dateRangeService.RptDate:dd-MMM-yyyy})";
+            template.Cells["B2"].Value = excelTitle;
         }
     }
 }

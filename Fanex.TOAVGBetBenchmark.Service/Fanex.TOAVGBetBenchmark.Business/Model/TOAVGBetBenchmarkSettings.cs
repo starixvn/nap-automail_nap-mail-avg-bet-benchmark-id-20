@@ -1,8 +1,8 @@
-﻿namespace Fanex.TOAVGBetBenchmark.Business.Models
+﻿namespace Fanex.TOAVGBetBenchmark.Business.Model
 {
-    public class TOAVGBetBenchmarkSettings
+    public class ToavgBetBenchmarkSettings
     {
-        public string Exceltitle { get; set; }
+        public string ExcelTitle { get; set; }
 
         public string LetstalkGroup { get; set; } = "Saba-Soccer-Test";
 

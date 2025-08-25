@@ -1,11 +1,10 @@
-﻿using Fanex.TOAVGBetBenchmark.Business.Models;
-using Fanex.TOAVGBetBenchmark.Service.Services;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Spire.Xls;
 using System;
 using System.IO;
+using Fanex.TOAVGBetBenchmark.Business.Model;
 using Image = SixLabors.ImageSharp.Image;
 using Rectangle = SixLabors.ImageSharp.Rectangle;
 

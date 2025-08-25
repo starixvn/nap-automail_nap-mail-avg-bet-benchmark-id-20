@@ -1,9 +1,9 @@
-﻿using Fanex.Logging;
+﻿using System;
+using Fanex.Logging;
 using Fanex.Logging.Extensions;
 using Fanex.Logging.Extensions.Database;
-using System;
 
-namespace Fanex.TOAVGBetBenchmark.Service.Services
+namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
     public interface Log
     {

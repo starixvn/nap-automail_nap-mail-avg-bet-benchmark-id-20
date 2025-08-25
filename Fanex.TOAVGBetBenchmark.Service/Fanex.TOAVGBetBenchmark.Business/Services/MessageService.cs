@@ -14,12 +14,14 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
     {
         public LetstalkModel CreateLetstalkModel(string fileName, string letstalkGroup)
         {
-            var letstalkAttachments = new List<LetstalkAttachment>();
-            letstalkAttachments.Add(new LetstalkAttachment
+            var letstalkAttachments = new List<LetstalkAttachment>
             {
-                FileName = fileName,
-                Bytes = File.ReadAllBytes(fileName)
-            });
+                new()
+                {
+                    FileName = fileName,
+                    Bytes = File.ReadAllBytes(fileName)
+                }
+            };
 
             return new LetstalkModel
             {
