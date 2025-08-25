@@ -12,7 +12,6 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
     }
 
     public class MainServiceImp(
-        Log log,
         DataService dataService,
         LetstalkClientService letstalkService,
         ExcelService excelService,
@@ -38,6 +37,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             {
                 result.Success = false;
                 result.Message = e.Message;
+                var log = new LogImp();
                 log.Log(e);
             }
             finally
