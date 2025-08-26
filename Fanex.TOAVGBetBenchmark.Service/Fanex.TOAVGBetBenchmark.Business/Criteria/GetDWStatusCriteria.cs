@@ -1,10 +1,10 @@
 ﻿using Fanex.Data.Repository;
 
-namespace Fanex.TOAVGBetBenchmark.Business.Criterias
+namespace Fanex.TOAVGBetBenchmark.Business.Criteria
 {
-    public class GetDWStatusCriteria : CriteriaBase
+    public class GetDwStatusCriteria : CriteriaBase
     {
-        public string TaskIDList => "21";
+        public string TaskIdList => "21";
 
         public override string GetSettingKey()
         {

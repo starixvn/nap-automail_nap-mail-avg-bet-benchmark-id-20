@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Fanex.TOAVGBetBenchmark.Business.Models
+namespace Fanex.TOAVGBetBenchmark.Business.Model
 {
     public class ConfigSettingModel
     {
@@ -19,15 +19,15 @@ namespace Fanex.TOAVGBetBenchmark.Business.Models
 
         public string Password { get; set; }
 
-        public int FunctionIdNodata { get; set; }
+        public int FunctionIdNoData { get; set; }
 
         public bool IsManual { get; set; }
 
         public DateTime RptDate { get; set; }
 
-        public Dictionary<string, ImageProperty> ImageSettings { get; set; } = new Dictionary<string, ImageProperty>();
+        public Dictionary<string, ImageProperty> ImageSettings { get; set; } = new();
 
-        public TOAVGBetBenchmarkSettings TOAVGBetBenchmarkSettings { get; set; }
+        public ToavgBetBenchmarkSettings ToavgBetBenchmarkSettings { get; set; }
 
         public bool IsSentDirectly { get; set; }
 

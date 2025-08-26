@@ -1,6 +1,6 @@
 ﻿using Fanex.MailDelivery.Core.Models;
 
-namespace Fanex.TOAVGBetBenchmark.Business.Models
+namespace Fanex.TOAVGBetBenchmark.Business.Model
 {
     public class ExecuteResultModel
     {
@@ -8,6 +8,6 @@ namespace Fanex.TOAVGBetBenchmark.Business.Models
 
         public string Message { get; set; } = string.Empty;
 
-        public Mail Mail { get; set; } = new Mail();
+        public Mail Mail { get; set; } = new();
     }
 }

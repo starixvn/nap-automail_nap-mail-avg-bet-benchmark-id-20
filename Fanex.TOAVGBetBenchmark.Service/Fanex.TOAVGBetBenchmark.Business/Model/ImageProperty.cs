@@ -1,4 +1,4 @@
-﻿namespace Fanex.TOAVGBetBenchmark.Business.Models
+﻿namespace Fanex.TOAVGBetBenchmark.Business.Model
 {
     public class ImageProperty
     {

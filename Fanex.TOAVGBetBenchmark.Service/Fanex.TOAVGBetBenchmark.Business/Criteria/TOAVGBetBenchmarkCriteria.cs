@@ -1,9 +1,9 @@
-﻿using Fanex.Data.Repository;
-using System;
+﻿using System;
+using Fanex.Data.Repository;
 
-namespace Fanex.TOAVGBetBenchmark.Business.Criterias
+namespace Fanex.TOAVGBetBenchmark.Business.Criteria
 {
-    public class TOAVGBetBenchmarkCriteria : CriteriaBase
+    public class ToavgBetBenchmarkCriteria : CriteriaBase
     {
         public DateTime RptDate { get; set; }
 

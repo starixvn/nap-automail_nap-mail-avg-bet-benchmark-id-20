@@ -18,7 +18,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         {
             var attachments = new List<MailAttachment>
             {
-                new MailAttachment(fileName, FileExtension.MS_EXCEL)
+                new(fileName, FileExtension.MS_EXCEL)
             };
 
             return new Mail
@@ -34,7 +34,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         {
             var tuple = new Tuple<string, string, DateTime>(new FileInfo(fileName).Name, excelTitle, rptDate);
             var template = File.ReadAllText("Templates/TOAVGBetBenchmark.cshtml");
-            var result = Engine.Razor.RunCompile(template, $"Template-TOAVGBetBenchmark", model: tuple);
+            var result = Engine.Razor.RunCompile(template, "Template-TOAVGBetBenchmark", model: tuple);
 
             return result;
         }

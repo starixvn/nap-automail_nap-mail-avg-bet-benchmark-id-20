@@ -1,4 +1,4 @@
-﻿using Fanex.TOAVGBetBenchmark.Business.Models;
+﻿using Fanex.TOAVGBetBenchmark.Business.Model;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {

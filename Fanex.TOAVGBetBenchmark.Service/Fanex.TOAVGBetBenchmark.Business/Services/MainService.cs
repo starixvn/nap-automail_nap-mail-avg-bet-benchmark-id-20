@@ -1,9 +1,8 @@
 ﻿using Fanex.LetstalkService.Client;
 using Fanex.MailDelivery.Core.Models;
-using Fanex.TOAVGBetBenchmark.Business.Models;
-using Fanex.TOAVGBetBenchmark.Service.Services;
 using System;
 using System.Collections.Generic;
+using Fanex.TOAVGBetBenchmark.Business.Model;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
@@ -12,39 +11,18 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         JobMessage Execute();
     }
 
-    public class MainServiceImp : MainService
+    public class MainServiceImp(
+        DataService dataService,
+        LetstalkClientService letstalkService,
+        ExcelService excelService,
+        MessageService messageService,
+        FileService fileService,
+        MailService mailService,
+        DateRangeService dateRangeService)
+        : MainService
     {
-        private readonly Log log;
-        private readonly DataService dataService;
-        private readonly LetstalkClientService letstalkService;
-        private readonly ExcelService excelService;
-        private readonly MessageService messageService;
-        private readonly FileService fileService;
-        private readonly MailService mailService;
-        private readonly DateRangeService dateRangeService;
-
-        private readonly List<string> filePaths = new List<string>();
+        private readonly List<string> filePaths = [];
         private Mail mail = new() { Subject = string.Empty, Body = string.Empty };
-
-        public MainServiceImp(
-            Log log,
-            DataService dataService,
-            LetstalkClientService letstalkService,
-            ExcelService excelService,
-            MessageService messageService,
-            FileService fileService,
-            MailService mailService,
-            DateRangeService dateRangeService)
-        {
-            this.log = log;
-            this.dataService = dataService;
-            this.letstalkService = letstalkService;
-            this.excelService = excelService;
-            this.messageService = messageService;
-            this.fileService = fileService;
-            this.mailService = mailService;
-            this.dateRangeService = dateRangeService;
-        }
 
         public JobMessage Execute()
         {
@@ -59,6 +37,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             {
                 result.Success = false;
                 result.Message = e.Message;
+                var log = new LogImp();
                 log.Log(e);
             }
             finally
@@ -83,7 +62,15 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
             }
 
             var letstalkFails = new List<string>();
-            var rawData = dataService.QueryTOAVGBetBenchmark();
+            var rawData = dataService.QueryToavgBetBenchmark();
+            rawData.ForEach(row =>
+            {
+                row.Benchmark /= 1000;
+                row.AvgBenchmark /= 1000;
+                row.Mtd /= 1000;
+                row.AvgMtd /= 1000;
+            });
+
             var errFiles = rawData.Count > 0
                 ? SendLetstalkImageData(rawData)
                 : SendLetstalkImageNoData();
@@ -112,48 +99,33 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         private List<string> SendLetstalkImageData(List<BenchmarkModel> data)
         {
             var imageSentFail = new List<string>();
-            var letstalkFails = new List<string>();
-            var setting = AppConfigService.Config.TOAVGBetBenchmarkSettings;
+            var setting = AppConfigService.Config.ToavgBetBenchmarkSettings;
 
             var excelAllPath = excelService.ExportExcel(data, 0, 0, true, setting);
             SendLetstalk(excelAllPath, setting.LetstalkGroup);
             SendMail(setting, excelAllPath);
 
-            if (imageSentFail.Count > 0)
-            {
-                letstalkFails.Add($"{string.Join(Environment.NewLine, imageSentFail)} - Letstalk sent Unsuccessfully.");
-            }
-
             return imageSentFail;
         }
 
-        private void SendMail(TOAVGBetBenchmarkSettings setting, string excelAllPath)
+        private void SendMail(ToavgBetBenchmarkSettings setting, string excelAllPath)
         {
-            mail = mailService.CreateMail(excelAllPath, setting.Exceltitle, setting.Subject, dateRangeService.RptDate);
+            mail = mailService.CreateMail(excelAllPath, setting.ExcelTitle, setting.Subject, dateRangeService.RptDate);
         }
 
         private List<string> SendLetstalkImageNoData()
         {
-            var setting = AppConfigService.Config.TOAVGBetBenchmarkSettings;
+            var setting = AppConfigService.Config.ToavgBetBenchmarkSettings;
             var excelPath = excelService.ExportExcelWithNoData(setting);
             var status = SendLetstalk(excelPath, setting.LetstalkGroup);
             SendMail(setting, excelPath);
-            return new List<string> { status ? string.Empty : $"{excelPath} - Letstalk sent Unsuccessfully." };
+            return [status ? string.Empty : $"{excelPath} - Letstalk sent Unsuccessfully."];
         }
 
         private bool SendLetstalk(string imagePath, string group)
         {
-            var letstalkGroup = group;
-            var letstalkModel = messageService.CreateLetstalkModel(imagePath, letstalkGroup);
-            bool status;
-            if (AppConfigService.Config.IsSentDirectly)
-            {
-                status = letstalkService.SendMessage(letstalkModel);
-            }
-            else
-            {
-                status = true;
-            }
+            var letstalkModel = messageService.CreateLetstalkModel(imagePath, group);
+            var status = !AppConfigService.Config.IsSentDirectly || letstalkService.SendMessage(letstalkModel);
 
             filePaths.Add(imagePath);
 

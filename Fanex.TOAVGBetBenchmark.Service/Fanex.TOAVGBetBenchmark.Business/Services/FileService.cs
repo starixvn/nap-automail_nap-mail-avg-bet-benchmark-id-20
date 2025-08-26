@@ -1,7 +1,7 @@
-﻿using Fanex.TOAVGBetBenchmark.Business.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Fanex.TOAVGBetBenchmark.Business.Model;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
@@ -10,15 +10,8 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         void CopyFiles(List<string> fileNames);
     }
 
-    public class FileServiceImp : FileService
+    public class FileServiceImp(DataService dataService) : FileService
     {
-        private readonly DataService dataService;
-
-        public FileServiceImp(DataService dataService)
-        {
-            this.dataService = dataService;
-        }
-
         private void LogOneTime(DateTime date)
         {
             var fileInfo = new FileInfo(AppConfigService.Config.OneTimePath);
@@ -28,7 +21,7 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
                 FolderName = fileInfo.Name,
                 GenerateTime = $"{DateTime.Now:yyyy-MM-dd hh:mm:ss tt}",
                 TargetName = AppConfigService.Config.TargetName,
-                Group = AppConfigService.Config.TOAVGBetBenchmarkSettings.LetstalkGroup
+                Group = AppConfigService.Config.ToavgBetBenchmarkSettings.LetstalkGroup
             };
 
             dataService.LetstalkPreRunLogInsert(oneTimeModel);
@@ -37,13 +30,13 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
         public void CopyFiles(List<string> fileNames)
         {
             var date = DateTime.Today.AddDays(-1);
-            var path = $@"{AppConfigService.Config.OneTimePath}/{date:yyyyMMdd}";
+            var path = $"{AppConfigService.Config.OneTimePath}/{date:yyyyMMdd}";
             Directory.CreateDirectory(path);
             var index = 1;
             fileNames.ForEach(fileName =>
             {
                 var sortName = $"{index}_{new FileInfo(fileName).Name}";
-                var destinationPath = $@"{path}/{sortName}";
+                var destinationPath = $"{path}/{sortName}";
                 File.Copy(fileName, destinationPath, true);
                 index++;
             });

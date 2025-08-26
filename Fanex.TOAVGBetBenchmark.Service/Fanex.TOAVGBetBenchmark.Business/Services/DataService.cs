@@ -1,35 +1,26 @@
 ﻿using Fanex.Data.Repository;
 using Fanex.TOAVGBetBenchmark.Business.Criteria;
-using Fanex.TOAVGBetBenchmark.Business.Criterias;
-using Fanex.TOAVGBetBenchmark.Business.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Fanex.TOAVGBetBenchmark.Business.Model;
 
 namespace Fanex.TOAVGBetBenchmark.Business.Services
 {
     public interface DataService
     {
-        List<BenchmarkModel> QueryTOAVGBetBenchmark();
+        List<BenchmarkModel> QueryToavgBetBenchmark();
 
         bool IsDataAvailable();
 
         void LetstalkPreRunLogInsert(LogInternalOneTimeModel oneTimeModel);
     }
 
-    public class DataServiceImp : DataService
+    public class DataServiceImp(DateRangeService dateRangeService, IDynamicRepository repository)
+        : DataService
     {
-        private readonly IDynamicRepository repository;
-        private readonly DateRangeService dateRangeService;
-
-        public DataServiceImp(DateRangeService dateRangeService, IDynamicRepository repository)
+        public List<BenchmarkModel> QueryToavgBetBenchmark()
         {
-            this.dateRangeService = dateRangeService;
-            this.repository = repository;
-        }
-
-        public List<BenchmarkModel> QueryTOAVGBetBenchmark()
-        {
-            var criteria = new TOAVGBetBenchmarkCriteria
+            var criteria = new ToavgBetBenchmarkCriteria
             {
                 RptDate = dateRangeService.RptDate
             };
@@ -39,14 +30,13 @@ namespace Fanex.TOAVGBetBenchmark.Business.Services
 
         public bool IsDataAvailable()
         {
-            var result = false;
             if (AppConfigService.Config.IsManual || !AppConfigService.Config.IsCheckEnoughData)
             {
                 return true;
             }
 
-            var status = repository.Get<TaskstatusModel>(new GetDWStatusCriteria());
-            result = status.DataIsReady;
+            var status = repository.Get<TaskStatusModel>(new GetDwStatusCriteria());
+            var result = status.DataIsReady;
 
             return result;
         }

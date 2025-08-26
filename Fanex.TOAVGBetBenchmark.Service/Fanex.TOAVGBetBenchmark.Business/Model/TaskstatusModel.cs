@@ -1,6 +1,6 @@
-﻿namespace Fanex.TOAVGBetBenchmark.Business.Models
+﻿namespace Fanex.TOAVGBetBenchmark.Business.Model
 {
-    public class TaskstatusModel
+    public class TaskStatusModel
     {
         public bool DataIsReady { get; set; }
     }
